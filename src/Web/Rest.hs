@@ -1,10 +1,10 @@
 {-# LANGUAGE StandaloneDeriving, DeriveFunctor, OverloadedStrings #-}
 module Web.Rest (
     Request(..),
+    Method,Location,
+    requestGET,
     Response(..),
-    RestT,
-    Rest,
-    rest,
+    RestT,Rest,rest,
     Endpoint,
     runRestT,
     RestError(..)) where
@@ -27,7 +27,7 @@ import Control.Exception (IOException)
 
 import Network.Http.Client (
     Hostname,Port,openConnection,closeConnection,Connection,
-    buildRequest,http,Method(POST),setAccept,setContentType,
+    buildRequest,http,Method(GET,POST),setAccept,setContentType,
     sendRequest,inputStreamBody,
     receiveResponse,getStatusCode,getHeader,concatHandler)
 import System.IO.Streams.ByteString (fromByteString)
@@ -35,13 +35,18 @@ import System.IO.Streams.ByteString (fromByteString)
 -- | A typical Rest Request.
 data Request = Request {
     method      :: Method,
-    location    :: Text,
+    location    :: Location,
     accept      :: Text,
     requestType :: Text,
     requestBody :: ByteString
 }
 
 deriving instance Show Request
+
+type Location = Text
+
+requestGET :: Location -> Request
+requestGET location = Request GET location "*/*" "*/*" ""
 
 -- | A typical Rest Response.
 data Response = Response {
@@ -112,6 +117,8 @@ data RestError = OpenConncetionError String
                | ByteStringToStreamError String
                | SendRequestError String
                | ReceiveResponseError String
+
+deriving instance Show RestError
 
 -- | Annotate an error.
 onFailure :: Monad m => EitherT a m r -> (a -> b) -> EitherT b m r
