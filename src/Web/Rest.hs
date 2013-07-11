@@ -1,8 +1,7 @@
 {-# LANGUAGE StandaloneDeriving, DeriveFunctor, OverloadedStrings #-}
 module Web.Rest (
     Request(..),
-    Method,Location,
-    requestGET,
+    Method,Location,Accept,ContentType,Body,
     Response(..),
     RestT,Rest,rest,
     Endpoint,
@@ -36,23 +35,23 @@ import System.IO.Streams.ByteString (fromByteString)
 data Request = Request {
     method      :: Method,
     location    :: Location,
-    accept      :: Text,
-    requestType :: Text,
-    requestBody :: ByteString
+    accept      :: Accept,
+    requestType :: ContentType,
+    requestBody :: Body
 }
 
 deriving instance Show Request
 
 type Location = Text
-
-requestGET :: Location -> Request
-requestGET location = Request GET location "*/*" "*/*" ""
+type Accept = Text
+type ContentType = Text
+type Body = ByteString
 
 -- | A typical Rest Response.
 data Response = Response {
     code         :: (Int,Int,Int),
-    responseType :: Maybe Text,
-    responseBody :: ByteString
+    responseType :: Maybe ContentType,
+    responseBody :: Body
 }
 
 deriving instance Show Response
