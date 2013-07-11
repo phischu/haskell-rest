@@ -6,7 +6,8 @@ module Web.Rest (
     Rest,
     rest,
     Endpoint,
-    runRestT) where
+    runRestT,
+    RestError(..)) where
 
 import Control.Monad.Trans.Free (FreeT,FreeF(Pure,Free),liftF,runFreeT)
 import Control.Monad.Trans (lift)
