@@ -11,7 +11,9 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Web.Rest
+  exposed-modules:     Web.Rest,
+                       Web.Rest.Internal,
+                       Web.Rest.IOStreams
   -- other-modules:       
   build-depends:       base ==4.6.*,
                        text,
