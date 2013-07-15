@@ -1,7 +1,7 @@
 {-# LANGUAGE StandaloneDeriving, DeriveFunctor, OverloadedStrings #-}
 module Web.Rest (
     Request(..),
-    Method,Location,Accept,ContentType,Body,
+    Method(..),Location,Accept,ContentType,Body,
     Response(..),
     RestT,Rest,rest,
     runRestT,RestError(..)) where
