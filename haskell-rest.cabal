@@ -15,7 +15,7 @@ library
                        Web.Rest.Internal,
                        Web.Rest.IOStreams
   -- other-modules:       
-  build-depends:       base ==4.6.*,
+  build-depends:       base,
                        text,
                        bytestring,
                        mtl,
