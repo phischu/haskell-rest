@@ -1,6 +1,6 @@
 
 name:                haskell-rest
-version:             0.2.0.0
+version:             0.3.1.0
 synopsis:            Simple REST client.
 license:             BSD3
 license-file:        LICENSE

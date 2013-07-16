@@ -15,16 +15,19 @@ data Method      = GET | POST | PUT | DELETE
 deriving instance Show Method
 
 -- | The target.
-type Location    = Text
+type Location     = Text
 
 -- | The expected result type.
-type Accept      = Text
+type Accept       = Text
 
 -- | The type of the body.
-type ContentType = Text
+type ContentType  = Text
 
 -- | The content.
-type Body        = ByteString
+type Body         = ByteString
+
+-- | The Response code.
+type ResponseCode = (Int,Int,Int)
 
 -- | A typical Rest Request.
 data Request = Request {
@@ -39,7 +42,7 @@ deriving instance Show Request
 
 -- | A typical Rest Response.
 data Response = Response {
-    code         :: (Int,Int,Int),
+    code         :: ResponseCode,
     responseType :: Maybe ContentType,
     responseBody :: Body
 }

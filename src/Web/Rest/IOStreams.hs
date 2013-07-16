@@ -1,6 +1,6 @@
 {-# LANGUAGE StandaloneDeriving, OverloadedStrings #-}
 module Web.Rest.IOStreams (
-    runRestT,RestError(..)) where
+    runRestT,Hostname,Port,RestError(..)) where
 
 import Web.Rest.Internal (
     Request(..),Method(..),Response(Response),
@@ -22,19 +22,25 @@ import Data.EitherR (catchT)
 import Control.Exception (IOException)
 
 import Network.Http.Client (
-    Hostname,Port,openConnection,closeConnection,Connection,
+    openConnection,closeConnection,Connection,
     buildRequest,http,setAccept,setContentType,
     sendRequest,inputStreamBody,
     receiveResponse,getStatusCode,getHeader,concatHandler)
 import qualified Network.Http.Client (
-    Method(..))
+    Method(..),Hostname,Port)
 import System.IO.Streams.ByteString (fromByteString)
+
+-- | The host url. For example "example.com".
+type Hostname = Text
+
+-- | The host port. For example 7474.
+type Port     = Int
 
 -- | Run a given description of REST calls against the given hostname, port and endpoint.
 runRestT :: (MonadIO m) => Hostname -> Port -> RestT m a -> m (Either RestError a)
 runRestT hostname port restt = runEitherT (do
 
-        connection <- scriptIO (openConnection hostname port)
+        connection <- scriptIO (openConnection (encodeUtf8 hostname) (fromIntegral port))
             `onFailure` OpenConncetionError
 
         result     <- interpretRestT connection restt

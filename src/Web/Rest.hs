@@ -3,14 +3,16 @@ module Web.Rest (
     Request(..),
     Method(..),Location,Accept,ContentType,Body,
     Response(..),
+    ResponseCode,
     RestT,Rest,rest,
-    runRestT,RestError(..)) where
+    runRestT,Hostname,Port,RestError(..)) where
 
 import Web.Rest.Internal (
     Request(..),
     Method(..),Location,Accept,ContentType,Body,
     Response(..),
+    ResponseCode,
     RestT,Rest,rest)
 
 import Web.Rest.IOStreams (
-    runRestT,RestError(..))
+    runRestT,Hostname,Port,RestError(..))
