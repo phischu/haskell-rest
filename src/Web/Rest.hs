@@ -14,5 +14,5 @@ import Web.Rest.Internal (
     ResponseCode,
     RestT,Rest,rest)
 
-import Web.Rest.IOStreams (
+import Web.Rest.HTTP (
     runRestT,Hostname,Port,RestError(..))
