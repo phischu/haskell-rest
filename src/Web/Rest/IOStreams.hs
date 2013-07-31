@@ -6,20 +6,17 @@ import Web.Rest.Internal (
     Request(..),Method(..),Response(Response),
     RestT,RestF(..))
 
-import Control.Monad.Trans.Free (FreeT,FreeF(Pure,Free),liftF,runFreeT)
+import Control.Monad.Trans.Free (
+    FreeT,FreeF(Pure,Free),runFreeT)
 
 import Control.Monad.Trans (lift)
 import Control.Monad.IO.Class (MonadIO)
 
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8,decodeUtf8)
-import Data.ByteString (ByteString)
 
 import Control.Error (
-    EitherT,fmapLT,runEitherT,scriptIO,left)
-import Data.EitherR (catchT)
-
-import Control.Exception (IOException)
+    EitherT,fmapLT,runEitherT,scriptIO)
 
 import Network.Http.Client (
     openConnection,closeConnection,Connection,
@@ -27,7 +24,7 @@ import Network.Http.Client (
     sendRequest,inputStreamBody,
     receiveResponse,getStatusCode,getHeader,concatHandler)
 import qualified Network.Http.Client (
-    Method(..),Hostname,Port)
+    Method(..))
 import System.IO.Streams.ByteString (fromByteString)
 
 -- | The host url. For example "example.com".
