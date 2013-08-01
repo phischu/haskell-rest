@@ -1,3 +1,4 @@
+{-# LANGUAGE StandaloneDeriving #-}
 module Web.Rest.HTTP (
     runRestT,Hostname,Port,RestError(..)
     ) where
@@ -7,8 +8,8 @@ import Web.Rest.Internal (
     Request(..),Response(..))
 
 import Network.HTTP (
-    simpleHTTP,
-    mkHeader,HeaderName(HdrAccept,HdrContentType),lookupHeader)
+    simpleHTTP,mkHeader,lookupHeader,
+    HeaderName(HdrAccept,HdrContentType,HdrContentLength))
 
 import qualified Network.HTTP as HTTP (
     Request(Request),RequestMethod(..),
@@ -29,6 +30,7 @@ import Control.Monad.Trans (lift)
 import Control.Monad.IO.Class (MonadIO)
 
 import Data.Text (Text,unpack,pack)
+import qualified Data.ByteString as ByteString (length)
 
 -- | The host url. For example "example.com".
 type Hostname = Text
@@ -39,6 +41,8 @@ type Port     = Int
 -- | Possible errors when running a 'RestT' with the HTTP backend.
 data RestError = SimpleHTTPError String
                | ConnError ConnError
+
+deriving instance Show RestError
 
 -- | Run the given rest calls against the given hostname and port. Return a 'Left' on
 --   error.
@@ -56,11 +60,12 @@ interpretRestT hostname port restt = do
 
             let httprequest = HTTP.Request httpuri httpmethod httpheaders httpbody
                 httpuri     = URI "http:" (Just uriauth) (unpack (location request)) "" ""
-                uriauth     = URIAuth "" (unpack hostname) (show port)
+                uriauth     = URIAuth "" (unpack hostname) (":" ++ (show port))
                 httpmethod  = (methodToMethod (method request))
                 httpheaders = [
-                    mkHeader HdrAccept      (unpack (accept      request)),
-                    mkHeader HdrContentType (unpack (requestType request))]
+                    mkHeader HdrAccept        (unpack (accept      request)),
+                    mkHeader HdrContentType   (unpack (requestType request)),
+                    mkHeader HdrContentLength (show   (ByteString.length (httpbody)))]
                 httpbody    = (requestBody request) 
 
             resultresponse <- scriptIO (simpleHTTP httprequest)
